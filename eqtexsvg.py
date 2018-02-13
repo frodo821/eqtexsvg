@@ -73,7 +73,7 @@ except ImportError:
 import sys
 import tempfile
 from subprocess import Popen, PIPE
-from StringIO import StringIO
+from io import StringIO
 import platform
 
 
@@ -85,8 +85,8 @@ def exec_cmd(cmd_line=None, debug=True):
     process = Popen(cmd_line, shell=True, stdin=PIPE, stdout=PIPE, stderr=PIPE)
 
     (std_out, std_err) = process.communicate()
-    std_out = clean(std_out)
-    std_err = clean(std_err)
+    std_out = clean(std_out.decode())
+    std_err = clean(std_err.decode())
 
     if debug:
         logging.debug(cmd_line)
@@ -194,7 +194,7 @@ class Equation:
                 if self.debug:
                     logging.debug(program_name + " not OK")
 
-        except OSError, err:
+        except OSError as err:
             if self.debug:
                 logging.debug(program_name + " failed: " + err)
             sys.stderr.write(program_name + " failed:" + err)
